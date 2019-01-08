@@ -26,6 +26,17 @@ class App extends Component {
     );    
   }
 
+  changeDynNameHandler = (event) => {
+      this.setState( {
+        persons : [
+          {name: "Edgars", age: 28},
+          {name: "Andrejs", age: 24},
+          {name: event.target.value, age: 15}
+        ]
+      }
+    );    
+  }
+
   render() {
     return (
       <div className="App">
@@ -41,7 +52,8 @@ class App extends Component {
        My Hobbies: Learn React</Person>
        <Person 
        name={this.state.persons[2].name}
-       age={this.state.persons[2].age}/>
+       age={this.state.persons[2].age}
+       changed={this.changeDynNameHandler}/>
       </div>
     );
 
