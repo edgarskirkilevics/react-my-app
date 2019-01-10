@@ -7,9 +7,9 @@ class App extends Component {
 
   state = {
     persons : [
-      {name: "Edgars", age: 28},
-      {name: "Andrejs", age: 24},
-      {name: "Max", age: 20}
+      {id: 'a1', name: "Edgars", age: 28},
+      {id: 'a2', name: "Andrejs", age: 24},
+      {id: 'a3', name: "Max", age: 20}
     ],
     showPersons: false
   }
@@ -27,15 +27,27 @@ class App extends Component {
     );    
   }
 
-  changeDynNameHandler = (event) => {
-      this.setState( {
-        persons : [
-          {name: "Edgars", age: 28},
-          {name: "Andrejs", age: 24},
-          {name: event.target.value, age: 15}
-        ]
-      }
-    );    
+  changeDynNameHandler = (event, id) => {
+
+    const personIndex = this.state.persons.findIndex(p => {
+      return p.id === id;
+    });
+
+    const person = {...this.state.persons[personIndex]};
+
+    person.name =event.target.value;
+
+    const persons = [...this.state.persons];
+    persons[personIndex] = person;
+
+      this.setState( {persons : persons});    
+  }
+
+  deletePersonHandler = (personIndex) => {
+      //const persons = this.state.persons.slice();
+      const persons = [...this.state.persons]; //The same as  -> const persons = this.state.persons.slice(); you cant use just this.state.persons because you copy only reference to array object and operate with original values
+      persons.splice(personIndex, 1);
+      this.setState({persons: persons});
   }
 
   togglePersonHandler = () => {
@@ -58,10 +70,13 @@ class App extends Component {
     if(this.state.showPersons) {
       persons = (       
       <div>
-        {this.state.persons.map(person =>{
+        {this.state.persons.map((person, index) =>{
           return <Person 
+          click = {this.deletePersonHandler.bind(this, index)}
           name = {person.name}
-          age = {person.age} />
+          age = {person.age} 
+          key = {person.id}
+          changed = {(event) => this.changeDynNameHandler(event, person.id)}/>
         })}
         {/* <Person 
         name={this.state.persons[0].name} 
